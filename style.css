@@ -113,6 +113,10 @@ p.lead {
 .jumpnav a.j-me { background: var(--me); color: #fff; }
 .jumpnav a.j-joy { background: var(--joy); color: #7a4800; }
 
+.jumpnav a.j-love::before { content: '❤️ '; }
+.jumpnav a.j-me::before { content: '💎 '; }
+.jumpnav a.j-joy::before { content: '👑 '; }
+
 /* コントロール・検索パネル */
 .controls {
   max-width: 1100px;
@@ -208,6 +212,10 @@ input#search:focus {
 .g-me h2 { background: var(--me); color: #fff; }
 .g-joy h2 { background: var(--joy); color: #7a4800; }
 
+.g-love h2::before { content: '❤️ '; }
+.g-me h2::before { content: '💎 '; }
+.g-joy h2::before { content: '👑 '; }
+
 /* テーブル基本設計 */
 table {
   width: 100%;
@@ -271,6 +279,10 @@ td.song {
   color: var(--ink);
 }
 
+/* 見学可否カラー */
+.access-ok { color: #d02855; font-weight: 600; }
+.access-no { color: #3a5fd0; font-weight: 600; }
+
 .note {
   font-size: 0.8rem;
   color: var(--sub);
@@ -302,6 +314,39 @@ td.song {
   border-color: var(--tokyo);
 }
 
+/* Google Mapsボタン */
+.map-btn {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 2px 8px;
+  font-size: 0.68rem;
+  border: 1px solid #bbd4f8;
+  border-radius: 10px;
+  background: #eef4ff;
+  color: #3a6ec0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.map-btn:hover {
+  background: #d0e4ff;
+}
+
+/* 見学可フィルターボタン */
+.access-toggle {
+  border-color: #d02855 !important;
+  color: #d02855 !important;
+}
+
+.controls .access-toggle.active {
+  background: #d02855 !important;
+  color: #fff !important;
+  border-color: #d02855 !important;
+}
+
 /* 曲名グループ表示 */
 .song-group-section {
   max-width: 1100px;
@@ -313,11 +358,17 @@ td.song {
   margin: 0;
   padding: 6px 18px;
   border-radius: 20px;
-  background: linear-gradient(135deg, var(--love), var(--me));
   color: #fff;
   font-weight: 700;
   letter-spacing: 0.05em;
 }
+
+.song-h2--love { background: var(--love); }
+.song-h2--love::before { content: '♥ '; }
+.song-h2--me { background: var(--me); }
+.song-h2--me::before { content: '◆ '; }
+.song-h2--joy { background: var(--joy); color: #7a4800; }
+.song-h2--joy::before { content: '👑 '; }
 
 /* 曲でまとめるトグルボタン */
 .song-view-toggle {
@@ -330,6 +381,7 @@ td.song {
   color: #fff !important;
   border-color: var(--accent) !important;
 }
+
 
 /* お気に入りボタン */
 .fav-btn {

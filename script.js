@@ -1,11 +1,14 @@
 // --- 行キーと住所を事前計算して保存（DOM構造変更前に実施） ---
-document.querySelectorAll('.loc-table tbody tr').forEach(row => {
+document.querySelectorAll('.loc-table tbody tr').forEach((row, i) => {
   const song = row.querySelector('.song')?.textContent.trim() || '';
   const loc = row.cells[1]?.textContent.trim() || '';
   const addr = row.querySelector('.addr')?.textContent.trim() || '';
   row.dataset.rowKey = song + '__' + loc;
   row.dataset.locText = loc;
   row.dataset.addrText = addr;
+  row.dataset.origIdx = i;
+  const sid = row.closest('.group-section')?.id || '';
+  row.dataset.group = sid === 'group-love' ? 'love' : sid === 'group-me' ? 'me' : 'joy';
 });
 
 function getRowKey(row) {
@@ -63,6 +66,20 @@ document.querySelectorAll('.loc-table').forEach(table => {
   });
 });
 
+// --- 見学可否セルのカラーリング ---
+function colorAccessCells(container) {
+  container.querySelectorAll('td[data-label="見学・入場可否"]').forEach(td => {
+    const text = td.textContent.trim();
+    td.classList.remove('access-ok', 'access-no');
+    if (text.startsWith('不可')) {
+      td.classList.add('access-no');
+    } else if (text.startsWith('可')) {
+      td.classList.add('access-ok');
+    }
+  });
+}
+colorAccessCells(document.body);
+
 // --- 住所コピーボタン ---
 function makeCopyBtn(addrText) {
   const btn = document.createElement('button');
@@ -82,8 +99,22 @@ function makeCopyBtn(addrText) {
   return btn;
 }
 
+// --- Google Mapsボタン ---
+function makeMapBtn(addrText) {
+  const btn = document.createElement('a');
+  btn.className = 'map-btn';
+  btn.textContent = 'マップ';
+  btn.href = 'https://maps.google.com/?q=' + encodeURIComponent(addrText);
+  btn.target = '_blank';
+  btn.rel = 'noopener noreferrer';
+  btn.addEventListener('click', e => e.stopPropagation());
+  return btn;
+}
+
 document.querySelectorAll('td.addr').forEach(addrTd => {
-  addrTd.appendChild(makeCopyBtn(addrTd.dataset.addrText || addrTd.textContent.trim()));
+  const addr = addrTd.dataset.addrText || addrTd.textContent.trim();
+  addrTd.appendChild(makeCopyBtn(addr));
+  addrTd.appendChild(makeMapBtn(addr));
 });
 
 // --- モバイル詳細折りたたみ ---
@@ -120,6 +151,7 @@ document.querySelector('.group-section').parentNode.insertBefore(
 const filterButtons = document.querySelectorAll('.filter-btn');
 const groupSections = document.querySelectorAll('.group-section');
 const search = document.getElementById('search');
+let accessibleOnly = false;
 
 function applyFilters() {
   const activeCat = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
@@ -155,8 +187,11 @@ function applyFilters() {
                           locText.includes(searchQuery) ||
                           addrText.includes(searchQuery);
 
-      row.style.display = (matchCat && matchSearch) ? '' : 'none';
-      if (matchCat && matchSearch) visibleCount++;
+      const accessText = row.querySelector('td[data-label="見学・入場可否"]')?.textContent.trim() || '';
+      const matchAccess = !accessibleOnly || accessText.startsWith('可');
+
+      row.style.display = (matchCat && matchSearch && matchAccess) ? '' : 'none';
+      if (matchCat && matchSearch && matchAccess) visibleCount++;
     });
 
     section.style.display = visibleCount > 0 ? '' : 'none';
@@ -172,6 +207,18 @@ filterButtons.forEach(button => {
 });
 
 search.addEventListener('input', applyFilters);
+
+// --- 見学可フィルター ---
+const accessBtn = document.createElement('button');
+accessBtn.className = 'filter-btn access-toggle';
+accessBtn.textContent = '見学可のみ';
+document.querySelector('.filter-group').appendChild(accessBtn);
+
+accessBtn.addEventListener('click', () => {
+  accessibleOnly = !accessibleOnly;
+  accessBtn.classList.toggle('active', accessibleOnly);
+  applyFilters();
+});
 
 // --- 曲名グループ表示 ---
 function buildSongView() {
@@ -190,6 +237,7 @@ function buildSongView() {
       access: '',
       hours: '',
       cat: row.dataset.cat,
+      group: row.dataset.group || 'love',
     };
 
     row.querySelectorAll('td').forEach(td => {
@@ -211,7 +259,7 @@ function buildSongView() {
     const titleDiv = document.createElement('div');
     titleDiv.className = 'group-title';
     const h2 = document.createElement('h2');
-    h2.className = 'song-h2';
+    h2.className = 'song-h2 song-h2--' + (items[0].group || 'love');
     h2.textContent = song;
     titleDiv.appendChild(h2);
     section.appendChild(titleDiv);
@@ -251,7 +299,10 @@ function buildSongView() {
         if (cls) td.className = cls;
         if (html) td.innerHTML = html;
         else td.textContent = text || '';
-        if (copy) td.appendChild(makeCopyBtn(item.addr));
+        if (copy) {
+          td.appendChild(makeCopyBtn(item.addr));
+          td.appendChild(makeMapBtn(item.addr));
+        }
         tr.appendChild(td);
       });
 
@@ -264,7 +315,21 @@ function buildSongView() {
     section.appendChild(table);
     songViewContainer.appendChild(section);
   });
+  colorAccessCells(songViewContainer);
 }
+
+// --- 50音順ソート（デフォルト） ---
+document.querySelectorAll('.loc-table tbody').forEach(tbody => {
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  rows.sort((a, b) => {
+    const songA = a.querySelector('.song')?.textContent.trim() || '';
+    const songB = b.querySelector('.song')?.textContent.trim() || '';
+    const cmp = songA.localeCompare(songB, 'ja');
+    if (cmp !== 0) return cmp;
+    return parseInt(a.dataset.origIdx) - parseInt(b.dataset.origIdx);
+  });
+  rows.forEach(r => tbody.appendChild(r));
+});
 
 // 曲でまとめるトグルボタン
 const songViewToggleBtn = document.createElement('button');
