@@ -1,18 +1,18 @@
 :root {
-  --bg: #f8f9fa;
+  --bg: #fdf0f5;
   --card: #ffffff;
-  --ink: #2b303a;
-  --sub: #6c757d;
-  --accent: #c0395a;
-  --tokyo: #2f7a4f;
-  --tokyo-bg: #e7f5ec;
-  --near: #d4a373;
-  --near-bg: #fefae0;
-  --out: #495057;
-  --out-bg: #e9ecef;
-  --closed: #e63946;
-  --closed-bg: #ffe5ec;
-  --border: #e9ecef;
+  --ink: #3d2040;
+  --sub: #a07898;
+  --accent: #e0508a;
+  --tokyo: #3a8a68;
+  --tokyo-bg: #e8f7f0;
+  --near: #e06878;
+  --near-bg: #fdeef0;
+  --out: #7070a0;
+  --out-bg: #eeecf8;
+  --closed: #e04060;
+  --closed-bg: #fde0ea;
+  --border: #f5cee0;
   --love: #EA697F;
   --me: #66c2b3;
   --joy: #ffd166;
@@ -72,10 +72,10 @@ p.lead {
   white-space: nowrap;
 }
 
-.leg-near { background: var(--near-bg); color: #9a7d0a; border: 1px solid rgba(154,125,10,0.3); }
-.leg-tokyo { background: var(--tokyo-bg); color: var(--tokyo); border: 1px solid rgba(47,122,79,0.3); }
-.leg-out { background: var(--out-bg); color: var(--out); border: 1px solid rgba(73,80,87,0.2); }
-.leg-closed { background: var(--closed-bg); color: var(--closed); border: 1px solid rgba(230,57,70,0.3); }
+.leg-near { background: var(--near-bg); color: var(--near); border: 1px solid rgba(224,104,120,0.3); }
+.leg-tokyo { background: var(--tokyo-bg); color: var(--tokyo); border: 1px solid rgba(58,138,104,0.3); }
+.leg-out { background: var(--out-bg); color: var(--out); border: 1px solid rgba(112,112,160,0.3); }
+.leg-closed { background: var(--closed-bg); color: var(--closed); border: 1px solid rgba(224,64,96,0.3); }
 
 /* スティッキーナビゲーション */
 .jumpnav {
@@ -111,7 +111,7 @@ p.lead {
 
 .jumpnav a.j-love { background: var(--love); }
 .jumpnav a.j-me { background: var(--me); color: #fff; }
-.jumpnav a.j-joy { background: var(--joy); color: #5c4300; }
+.jumpnav a.j-joy { background: var(--joy); color: #7a4800; }
 
 /* コントロール・検索パネル */
 .controls {
@@ -206,7 +206,7 @@ input#search:focus {
 
 .g-love h2 { background: var(--love); }
 .g-me h2 { background: var(--me); color: #fff; }
-.g-joy h2 { background: var(--joy); color: #5c4300; }
+.g-joy h2 { background: var(--joy); color: #7a4800; }
 
 /* テーブル基本設計 */
 table {
@@ -219,7 +219,7 @@ table {
 }
 
 thead th {
-  background: #2b303a;
+  background: #5c2d6e;
   color: #fff;
   text-align: left;
   padding: 14px 16px;
@@ -238,7 +238,7 @@ tbody tr:last-child {
 }
 
 tbody tr:hover {
-  background: #fdfbfb;
+  background: #fef6f9;
 }
 
 td {
@@ -262,7 +262,7 @@ td.song {
   white-space: nowrap;
 }
 
-.b-near { background: var(--near-bg); color: #9a7d0a; }
+.b-near { background: var(--near-bg); color: var(--near); }
 .b-tokyo { background: var(--tokyo-bg); color: var(--tokyo); }
 .b-out { background: var(--out-bg); color: var(--out); }
 .b-closed { background: var(--closed-bg); color: var(--closed); }
@@ -274,6 +274,61 @@ td.song {
 .note {
   font-size: 0.8rem;
   color: var(--sub);
+}
+
+/* 住所コピーボタン */
+.copy-btn {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 0.68rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--sub);
+  cursor: pointer;
+  transition: all 0.2s;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  background: var(--border);
+}
+
+.copy-btn.copy-done {
+  background: var(--tokyo-bg);
+  color: var(--tokyo);
+  border-color: var(--tokyo);
+}
+
+/* 曲名グループ表示 */
+.song-group-section {
+  max-width: 1100px;
+  margin: 0 auto 48px;
+}
+
+.song-h2 {
+  font-size: 1rem;
+  margin: 0;
+  padding: 6px 18px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--love), var(--me));
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* 曲でまとめるトグルボタン */
+.song-view-toggle {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+.controls .song-view-toggle.active {
+  background: var(--accent) !important;
+  color: #fff !important;
+  border-color: var(--accent) !important;
 }
 
 /* お気に入りボタン */
